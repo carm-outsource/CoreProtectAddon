@@ -1,6 +1,10 @@
 package cc.carm.outsource.plugin.coreprotectaddon;
 
 import cc.carm.lib.easyplugin.EasyPlugin;
+import cc.carm.lib.mineconfiguration.bukkit.MineConfiguration;
+import cc.carm.outsource.plugin.coreprotectaddon.command.QueryCommands;
+import cc.carm.outsource.plugin.coreprotectaddon.conf.PluginConfig;
+import cc.carm.outsource.plugin.coreprotectaddon.conf.PluginMessages;
 import org.bukkit.event.Listener;
 
 public class Main extends EasyPlugin implements Listener {
@@ -11,10 +15,21 @@ public class Main extends EasyPlugin implements Listener {
         Main.instance = this;
     }
 
+    protected MineConfiguration configuration;
+
+    @Override
+    protected void load() {
+
+        log("加载配置文件...");
+        this.configuration = new MineConfiguration(this, PluginConfig.class, PluginMessages.class);
+
+    }
 
     @Override
     protected boolean initialize() {
-        registerListener(this);
+
+        log("注册命令...");
+        registerCommand("coreprotectquery", new QueryCommands(this));
 
         return true;
     }

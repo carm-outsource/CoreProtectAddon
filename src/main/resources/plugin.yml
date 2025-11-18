@@ -1,4 +1,4 @@
-main: ${project.package}.Main
+main: cc.carm.outsource.plugin.coreprotectaddon.Main
 name: ${project.name}
 
 version: ${project.version}
@@ -9,3 +9,16 @@ authors:
   - CarmJos
 
 api-version: 1.16
+
+softdepend:
+  - CoreProtect
+
+permissions:
+  coreprotectaddon.command.query:
+    description: 允许使用查询命令。
+    default: op
+
+commands:
+  coreprotectquery:
+    description: CoreProtectAddon 的查询功能指令。
+    aliases: [ coq ]

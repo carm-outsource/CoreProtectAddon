@@ -25,7 +25,7 @@ CoreProtect 插件的外部拓展。
 
 管理输入了一个指令：
 ```
-/coreprotectcmdquery user:Loliiiico time:3d action:commond include:op Loliiiico
+/coq user:Loliiiico time:3d action:commond include:op Loliiiico
 ```
 插件会组装SQL查询语句，并根据配置文件coi的数据库进行查询 "op Loliiiico"
 
