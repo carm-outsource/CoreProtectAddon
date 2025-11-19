@@ -9,21 +9,20 @@ import cc.carm.lib.configuration.value.standard.ConfiguredValue;
 @ConfigPath(root = true)
 public interface PluginConfig extends Configuration {
 
-
     ConfiguredValue<Boolean> DEBUG = ConfiguredValue.of(Boolean.class, false);
 
     @HeaderComments("数据库相关配置")
     interface DATABASE extends Configuration {
 
         @ConfigPath("driver")
-        ConfiguredValue<String> DRIVER_NAME = ConfiguredValue.of(String.class, "com.mysql.cj.jdbc.Driver");
+        ConfiguredValue<String> DRIVER_NAME = ConfiguredValue.of("com.mysql.cj.jdbc.Driver");
 
-        ConfiguredValue<String> HOST = ConfiguredValue.of(String.class, "127.0.0.1");
-        ConfiguredValue<Integer> PORT = ConfiguredValue.of(Integer.class, 3306);
-        ConfiguredValue<String> DATABASE = ConfiguredValue.of(String.class, "minecraft");
-        ConfiguredValue<String> USERNAME = ConfiguredValue.of(String.class, "root");
-        ConfiguredValue<String> PASSWORD = ConfiguredValue.of(String.class, "password");
-        ConfiguredValue<String> EXTRA = ConfiguredValue.of(String.class, "?useSSL=false");
+        ConfiguredValue<String> HOST = ConfiguredValue.of("127.0.0.1");
+        ConfiguredValue<Integer> PORT = ConfiguredValue.of(3306);
+        ConfiguredValue<String> DATABASE = ConfiguredValue.of("minecraft");
+        ConfiguredValue<String> USERNAME = ConfiguredValue.of("root");
+        ConfiguredValue<String> PASSWORD = ConfiguredValue.of("password");
+        ConfiguredValue<String> EXTRA = ConfiguredValue.of("?sslMode=DISABLED&serverTimezone=Asia/Shanghai");
 
         static String buildJDBC() {
             return String.format("jdbc:mysql://%s:%s/%s%s",
@@ -37,6 +36,16 @@ public interface PluginConfig extends Configuration {
             ConfiguredValue<String> CHAT = ConfiguredValue.of(String.class, "co_chat");
             ConfiguredValue<String> COMMAND = ConfiguredValue.of(String.class, "co_command");
         }
+
+    }
+
+    @HeaderComments("查询相关配置")
+    interface QUERY extends Configuration {
+        @HeaderComments("每页显示的数据数量")
+        ConfiguredValue<Integer> PAGE_SIZE = ConfiguredValue.of(15);
+
+        @HeaderComments("查询结果是否按时间倒序排列（最新的在前）")
+        ConfiguredValue<Boolean> REVERSE_ORDER = ConfiguredValue.of(true);
 
     }
 

@@ -268,8 +268,8 @@
                             <shadedPattern>${project.package}.lib</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>${project.package}.lib.nbt</shadedPattern>
+                            <pattern>org.slf4j</pattern>
+                            <shadedPattern>${project.package}.lib.slf4j</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>

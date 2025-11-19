@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class TimeFormatUtils {
@@ -35,6 +36,13 @@ public class TimeFormatUtils {
         return FORMATTER.format(dateTime);
     }
 
+    public static @NotNull String datetime(long seconds) {
+        // 基于系统时区，将秒时间戳转换为日期时间字符串
+        return FORMATTER.format(java.time.Instant.ofEpochSecond(seconds)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime());
+    }
+
     public static @Nullable Duration parse(@NotNull String input) {
         // 解析形如 "2h30m15s" 的字符串
         long totalMillis = 0;
@@ -64,6 +72,30 @@ public class TimeFormatUtils {
             return null; // 无效格式
         }
         return Duration.ofMillis(totalMillis);
+    }
+
+    public static @Nullable Duration[] parseInterval(@NotNull String input) {
+        String[] parts = input.split("-");
+        if (parts.length > 2) {
+            return null; // Invalid format, more than one '-'
+        }
+
+        Duration duration1;
+        Duration duration2;
+
+        if (parts.length == 1) {
+            duration1 = parse(parts[0]);
+            duration2 = Duration.ZERO; // Represents "now"
+        } else { // parts.length == 2
+            duration1 = parse(parts[0]);
+            duration2 = parse(parts[1]);
+        }
+
+        if (duration1 == null || duration2 == null) {
+            return null; // one of the parts is invalid
+        }
+
+        return new Duration[]{duration1, duration2};
     }
 
 }

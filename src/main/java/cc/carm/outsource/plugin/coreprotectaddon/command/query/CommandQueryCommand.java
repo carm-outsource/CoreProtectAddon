@@ -21,9 +21,9 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatQueryCommand extends SubCommand<QueryCommands> {
+public class CommandQueryCommand extends SubCommand<QueryCommands> {
 
-    public ChatQueryCommand(@NotNull QueryCommands parent, String identifier, String... aliases) {
+    public CommandQueryCommand(@NotNull QueryCommands parent, String identifier, String... aliases) {
         super(parent, identifier, aliases);
     }
 
@@ -35,7 +35,7 @@ public class ChatQueryCommand extends SubCommand<QueryCommands> {
 
         Main.getInstance().getScheduler().runAsync(() -> {
 
-            TableQueryBuilder query = data.sql().createQuery().inTable(PluginConfig.DATABASE.TABLES.CHAT.resolve());
+            TableQueryBuilder query = data.sql().createQuery().inTable(PluginConfig.DATABASE.TABLES.COMMAND.resolve());
             String timeString = parameter.get("time", "t");
             if (timeString != null) {
                 Duration[] interval = TimeFormatUtils.parseInterval(timeString);
@@ -55,7 +55,7 @@ public class ChatQueryCommand extends SubCommand<QueryCommands> {
 
             }
 
-            String content = parameter.get("content", "c", "message", "m");
+            String content = parameter.get("content", "c", "command");
             if (content != null) {
                 query.addCondition("message", "REGEXP", content);
             }
@@ -88,15 +88,15 @@ public class ChatQueryCommand extends SubCommand<QueryCommands> {
             query.setPageLimit((page - 1) * pageSize, pageSize);
             query.orderBy("time", !PluginConfig.QUERY.REVERSE_ORDER.resolve());
 
-            List<ChatRecord> list = query.build().execute(sql -> {
+            List<Record> list = query.build().execute(sql -> {
                 ResultSet rs = sql.getResultSet();
-                List<ChatRecord> result = new ArrayList<>();
+                List<Record> result = new ArrayList<>();
 
                 while (rs.next()) {
                     long time = rs.getLong("time");
                     long userId = rs.getLong("user");
                     String message = rs.getString("message");
-                    result.add(new ChatRecord(time, data.getUser(UserKeyType.ID, userId), message));
+                    result.add(new Record(time, data.getUser(UserKeyType.ID, userId), message));
                 }
 
                 return result;
@@ -111,7 +111,7 @@ public class ChatQueryCommand extends SubCommand<QueryCommands> {
             } else {
                 PluginMessages.COST.prepare((System.currentTimeMillis() - s1), list.size()).to(sender);
                 List<String> contents = new ArrayList<>();
-                for (ChatRecord record : list) {
+                for (Record record : list) {
                     contents.addAll(PluginMessages.CONTENT.prepare(
                             TimeFormatUtils.datetime(record.time()),
                             record.user() == null ? "§c未知用户" : "§b" + record.user().name(),
@@ -124,7 +124,7 @@ public class ChatQueryCommand extends SubCommand<QueryCommands> {
         return null;
     }
 
-    record ChatRecord(long time, @Nullable UserKey user, String message) {
+    record Record(long time, @Nullable UserKey user, String message) {
     }
 
 
