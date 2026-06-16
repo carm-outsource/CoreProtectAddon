@@ -114,8 +114,8 @@ public class ChatQueryCommand extends SubCommand<QueryCommands> {
                 for (ChatRecord record : list) {
                     contents.addAll(PluginMessages.CONTENT.prepare(
                             TimeFormatUtils.datetime(record.time()),
-                            record.user() == null ? "§c未知用户" : "§b" + record.user().name(),
-                            record.message()
+                            (record.user() == null ? "§c未知用户" : "§b" + record.user().name()).replace("$", "\\$"),
+                            record.message().replace("$", "\\$")
                     ).parse(sender));
                 }
                 PluginMessages.PAGE.prepare(page).insert("content", contents).to(sender);
